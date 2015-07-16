@@ -24,5 +24,12 @@ interface UserInterface
      *
      * @return mixed
      */
-    public function roles();
+    public function role();
+
+    /**
+     * Check the user has Admin or Moderator permission
+     *
+     * @return boolean
+     */
+    public function isAdmin();
 }

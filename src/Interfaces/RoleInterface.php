@@ -22,9 +22,9 @@ interface RoleInterface
     /**
      * The relationship between Role and Permission models.
      *
-     * @return mixed
+     * @return array
      */
-    public function permissions();
+    public function getPermissions();
 
     /**
      * This method tells if the Role has the Permission or not.

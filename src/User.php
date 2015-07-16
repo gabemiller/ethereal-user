@@ -43,13 +43,34 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $hidden = ['password', 'remember_token'];
 
 
+    /**
+     * This method tells if the User has the Role or not.
+     *
+     * @param $role \Ethereal\User\Role
+     * @return boolean
+     */
     public function hasRole($role)
     {
-        // TODO: Implement hasRole() method.
+        return $this->role->name == $role;
     }
 
-    public function roles()
+    /**
+     * The relationship between User and Role models
+     *
+     * @return mixed
+     */
+    public function role()
     {
         return $this->hasOne('\Ethereal\User\Role');
+    }
+
+    /**
+     * Check the user has Admin or Moderator permission
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+        return $this->roles->hasPermission('moderator');
     }
 }

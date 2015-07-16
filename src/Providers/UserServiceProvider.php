@@ -25,6 +25,17 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bindShared('user', function () {
             return new User;
         });
+
+        $this->app->bindShared('role', function () {
+            return new Role;
+        });
+
+        /**
+         * Package merge config
+         */
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/ethereal-user.php', 'ethereal-user'
+        );
     }
 
     /**
@@ -32,6 +43,27 @@ class UserServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /**
+         * Package translations
+         */
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'ethereal-user');
+
+        /**
+         * Package routes
+         */
+        if (!$this->app->routesAreCached()) {
+            require __DIR__ . '/../Http/routes.php';
+        }
+
+        /**
+         * Package views
+         */
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'ethereal-user');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/ethereal-user'),
+        ],'views');
+
         /**
          * Package config
          */
