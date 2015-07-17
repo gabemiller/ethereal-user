@@ -8,7 +8,7 @@
 
 Route::group(['namespace' => 'Ethereal\User\Controllers'], function () {
 
-    Route::group(['prefix' => 'admin'], function () {
+    Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
         // Resource route for UserController
         Route::resource(trans('ethereal-user::routes.user.slug'), 'UserController',
@@ -16,6 +16,7 @@ Route::group(['namespace' => 'Ethereal\User\Controllers'], function () {
                 'names' => ['index' => 'admin.user.index',
                     'create' => 'admin.user.create',
                     'store' => 'admin.user.store',
+                    'show' => 'admin.user.show',
                     'edit' => 'admin.user.edit',
                     'update' => 'admin.user.update',
                     'destroy' => 'admin.user.destroy']]);
@@ -26,6 +27,7 @@ Route::group(['namespace' => 'Ethereal\User\Controllers'], function () {
                 'names' => ['index' => 'admin.role.index',
                     'create' => 'admin.role.create',
                     'store' => 'admin.role.store',
+                    'show' => 'admin.role.show',
                     'edit' => 'admin.role.edit',
                     'update' => 'admin.role.update',
                     'destroy' => 'admin.role.destroy']]);

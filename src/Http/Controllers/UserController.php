@@ -9,12 +9,14 @@
 namespace Ethereal\User\Controllers;
 
 
+use Ethereal\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +24,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('ethereal-user::admin.user.index');
+        $users = User::all();
+
+        return view('ethereal-user::admin.user.index', compact($users));
     }
 
     /**
@@ -43,7 +47,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.user.create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
     }
 
     /**
@@ -54,7 +68,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return view('ethereal-user::admin.user.show');
+        $user = User::findOrFail($id);
+
+        return view('ethereal-user::admin.user.show', compact($user));
     }
 
     /**
@@ -77,7 +93,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+
     }
 
     /**
@@ -88,6 +106,23 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        if ($user->delete()) {
+            return back()->with('message', 'A(z) ' . $id . ' azonosítójú felhasználó törlése sikerült!');
+        } else {
+            return back()->withError('A(z) ' . $id . ' azonosítójú felhasználó törlése nem sikerült!');
+        }
+    }
+
+    /**
+     * If the user not activated then activate the user
+     *
+     * @param $code
+     * @return Response
+     */
+    public function activate($code)
+    {
+
     }
 }
