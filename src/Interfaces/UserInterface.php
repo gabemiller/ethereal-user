@@ -21,6 +21,16 @@ interface UserInterface
     public function is($role, $all = true);
 
     /**
+     * Show that the user has the permission
+     * or has the permission with the right role
+     *
+     * @param $permission
+     * @param null $role
+     * @return mixed
+     */
+    public function can($permission,$role = null);
+
+    /**
      * The relationship between User and Role models
      *
      * @return mixed

@@ -79,6 +79,34 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * Show that the user has the permission
+     * or has the permission with the right role
+     *
+     * @param $permission
+     * @param null $role
+     * @return mixed
+     */
+    public function can($permission, $role = null)
+    {
+
+        if (!empty($role)) {
+            foreach ($this->role() as $r) {
+                if ($r->name == $role) {
+                    return $r->can($permission);
+                }
+            }
+
+            return false;
+        }
+
+        foreach ($this->role() as $r) {
+            return $r->can($permission);
+        }
+
+        return false;
+    }
+
+    /**
      * The relationship between User and Role models
      *
      * @return mixed
