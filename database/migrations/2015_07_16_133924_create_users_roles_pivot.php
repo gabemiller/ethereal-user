@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PermissionsRolesPivot extends Migration
+class CreateRolesUsersPivot extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class PermissionsRolesPivot extends Migration
      */
     public function up()
     {
-        Schema::create('permissions_roles', function (Blueprint $table) {
+        Schema::create('users_roles', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
-            $table->integer('permission_id')->unsigned();
-            $table->primary(['role_id', 'permission_id']);
+            $table->primary(['user_id', 'role_id']);
         });
     }
 
@@ -26,6 +26,6 @@ class PermissionsRolesPivot extends Migration
      */
     public function down()
     {
-        Schema::drop('permissions_roles');
+        Schema::drop('users_roles');
     }
 }
