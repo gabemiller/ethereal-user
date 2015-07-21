@@ -14,10 +14,11 @@ interface UserInterface
     /**
      * This method tells if the User has the Role or not.
      *
-     * @param $role \Ethereal\User\Role
+     * @param $role array|string
+     * @param $all boolean
      * @return boolean
      */
-    public function hasRole($role);
+    public function is($role, $all = true);
 
     /**
      * The relationship between User and Role models
@@ -32,4 +33,16 @@ interface UserInterface
      * @return boolean
      */
     public function isAdmin();
+
+    /**
+     * @param $role
+     * @return mixed
+     */
+    public function attachRole($role);
+
+    /**
+     * @param $role
+     * @return mixed
+     */
+    public function detachRole($role);
 }

@@ -15,6 +15,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, UserInterface
 {
@@ -42,16 +43,39 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token'];
 
-
     /**
      * This method tells if the User has the Role or not.
      *
-     * @param $role \Ethereal\User\Role
+     * @param $role array|string
      * @return boolean
      */
-    public function hasRole($role)
+    public function is($role, $all = true)
     {
-        return $this->role->name == $role;
+        // Check the $role is array or not
+        if (!is_array($role)) {
+            $role = explode('|', $role);
+        }
+
+        // The user should have all the roles or not
+        if ($all) {
+
+            // If user doesn't have at least one role, return false
+            foreach ($role as $r) {
+                if ($this->role()->slug != Str::slug($r)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // If user has at least one role, return true
+            foreach ($role as $r) {
+                if ($this->role()->slug == Str::slug($r)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     /**
@@ -61,7 +85,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function role()
     {
-        return $this->hasOne('\Ethereal\User\Role');
+        return $this->belongsToMany('Ethereal\User\Role', 'users_roles', 'user_id', 'role_id');
     }
 
     /**
@@ -71,6 +95,59 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function isAdmin()
     {
-        return $this->roles->hasPermission('moderator');
+        return $this->is(['Admin', 'Moderátor'], false);
+    }
+
+    /**
+     * @param $role
+     * @return mixed
+     */
+    public function attachRole($role)
+    {
+        $roleIds = array();
+
+        if (!is_array($role)) {
+            $role = explode('|', $role);
+        }
+
+        // Find or create the role, and get the id
+        foreach ($role as $r) {
+
+            // Get Role id
+            $roleObj = Role::firstOrCreate([
+                'name' => $r,
+                'slug' => Str::slug($r),
+            ]);
+
+            $roleIds[] = $roleObj->id;
+        }
+
+        // Attach roles to user
+        $this->role()->attach($roleIds);
+    }
+
+    /**
+     * @param $role
+     * @return mixed
+     */
+    public function detachRole($role)
+    {
+        $roleIds = array();
+
+        if (!is_array($role)) {
+            $role = explode('|', $role);
+        }
+
+        // Find or create the role, and get the id
+        foreach ($role as $r) {
+
+            // Get Role id
+            $roleObj = Role::where('slug', '=', Str::slug($r))->first();
+
+            $roleIds[] = $roleObj->id;
+        }
+
+        // Detach roles to user
+        $this->role()->detach($roleIds);
     }
 }

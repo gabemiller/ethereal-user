@@ -8,4 +8,40 @@
 
 return [
     'admin' => 'default.admin.master',
+
+    /**
+     * User validations
+     */
+
+    'userCreate' => [
+
+    ],
+
+    'userUpdate' =>[
+
+    ],
+
+    /**
+     * Role validations
+     */
+
+    'roleCreate' => [
+
+    ],
+
+    'roleUpdate' =>[
+
+    ],
+
+    /**
+     * Permission validations
+     */
+
+    'permissionCreate' => [
+
+    ],
+
+    'permissionUpdate' =>[
+
+    ],
 ];

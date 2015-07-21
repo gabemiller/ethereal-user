@@ -1,5 +1,5 @@
 # Ethereal-user 
-It's the user manager component for Ethereal CMS.
+It's a user manager component for Ethereal CMS.
 
 ## Service provider
 
@@ -11,5 +11,6 @@ Ethereal\User\Providers\UserServiceProvider::class,
 
 ```php
 'User' => Ethereal\User\Facades\User::class,
-'User' => Ethereal\User\Facades\Role::class,
+'Role' => Ethereal\User\Facades\Role::class,
+'Permission' => Ethereal\User\Facades\Permission::class,
 ```

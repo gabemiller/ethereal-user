@@ -29,4 +29,15 @@ return [
         'showTitle' => 'Szerepkör',
         'slug' => 'szerepkor',
     ],
+
+    /**
+     * Phrases for permission
+     */
+    'permission'=>[
+        'createTitle' => 'Jogosultság létrehozása',
+        'editTitle' => 'Jogosultság szkesztése',
+        'indexTitle' => 'Jogosultságok',
+        'showTitle' => 'Jogosultság',
+        'slug' => 'jogosultsag',
+    ],
 ];

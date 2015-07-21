@@ -31,6 +31,17 @@ Route::group(['namespace' => 'Ethereal\User\Controllers'], function () {
                     'edit' => 'admin.role.edit',
                     'update' => 'admin.role.update',
                     'destroy' => 'admin.role.destroy']]);
+
+        // Resource route for PermissionController
+        Route::resource(trans('ethereal-user::routes.permission.slug'), 'PermissionController',
+            ['middleware' => 'auth',
+                'names' => ['index' => 'admin.permission.index',
+                    'create' => 'admin.permission.create',
+                    'store' => 'admin.permission.store',
+                    'show' => 'admin.permission.show',
+                    'edit' => 'admin.permission.edit',
+                    'update' => 'admin.permission.update',
+                    'destroy' => 'admin.permission.destroy']]);
     });
 
 

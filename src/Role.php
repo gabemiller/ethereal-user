@@ -11,6 +11,7 @@ namespace Ethereal\User;
 
 use Ethereal\User\Interfaces\RoleInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Role extends Model implements RoleInterface
 {
@@ -27,7 +28,7 @@ class Role extends Model implements RoleInterface
      *
      * @var array
      */
-    protected $fillable = ['name','slug','permissions'];
+    protected $fillable = ['name', 'slug'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -44,33 +45,84 @@ class Role extends Model implements RoleInterface
      */
     public function users()
     {
-        return $this->belongsToMany('\Ethereal\User\User');
+        return $this->belongsToMany('Ethereal\User\User');
     }
 
     /**
      * The relationship between Role and Permission models.
      *
-     * @return mixed
+     * @return array
      */
-    public function getPermissions()
+    public function permissions()
     {
-        return json_decode($this->permissions);
+        return $this->belongsToMany('Ethereal\User\Permission', 'permissions_roles', 'role_id', 'permission_id');
     }
 
     /**
      * This method tells if the Role has the Permission or not.
      *
-     * @param $permission string
+     * @param $permission
      * @return boolean
      */
-    public function hasPermission($permission)
+    public function can($permission)
     {
-        $ps = $this->getPermissions();
-
-        if (!array_key_exists($permission, $ps)) {
-            return false;
+        foreach ($this->permissions() as $p) {
+            if ($p->name == $permission) {
+                return (boolean)$p->access;
+            }
         }
 
-        return (boolean)$ps[$permission];
+        return false;
+    }
+
+    /**
+     * Add permission to Role
+     *
+     * @param $permission array|string
+     * @return mixed
+     */
+    public function attachPermission($permission)
+    {
+        $permissionIds = array();
+
+        if (!is_array($permission)) {
+            $permission = explode('|', $permission);
+        }
+
+        foreach ($permission as $p) {
+
+            $permissionObj = Permission::firstOrCreate([
+                'name' => $permission,
+                'slug' => Str::slug($permission),
+            ]);
+
+            $permissionIds[] = $permissionObj->id;
+        }
+
+        $this->permissions()->attach($permission);
+    }
+
+    /**
+     * Remove permission from Role
+     *
+     * @param $permission
+     * @return mixed
+     */
+    public function detachPermission($permission)
+    {
+        $permissionIds = array();
+
+        if (!is_array($permission)) {
+            $permission = explode('|', $permission);
+        }
+
+        foreach ($permission as $p) {
+
+            $permissionObj = Permission::where('slug', '=', Str::slug($permission))->first();
+
+            $permissionIds[] = $permissionObj->id;
+        }
+
+        $this->permissions()->attach($permission);
     }
 }

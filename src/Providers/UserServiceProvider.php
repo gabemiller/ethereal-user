@@ -9,6 +9,8 @@
 namespace Ethereal\User\Providers;
 
 
+use Ethereal\User\Permission;
+use Ethereal\User\Role;
 use Ethereal\User\User;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +30,10 @@ class UserServiceProvider extends ServiceProvider
 
         $this->app->bindShared('role', function () {
             return new Role;
+        });
+
+        $this->app->bindShared('permission', function () {
+            return new Permission;
         });
 
         /**

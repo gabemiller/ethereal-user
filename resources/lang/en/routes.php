@@ -29,4 +29,15 @@ return [
         'showTitle' => 'Show role',
         'slug' => 'role',
     ],
+
+    /**
+     * Phrases for permission
+     */
+    'permission'=>[
+        'createTitle' => 'Create permission',
+        'editTitle' => 'Edit permission',
+        'indexTitle' => 'Permissions',
+        'showTitle' => 'Show permission',
+        'slug' => 'permission',
+    ],
 ];
