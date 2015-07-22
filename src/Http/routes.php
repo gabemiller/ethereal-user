@@ -45,4 +45,5 @@ Route::group(['namespace' => 'Ethereal\User\Controllers'], function () {
     });
 
 
+
 });

@@ -147,7 +147,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
                 'slug' => Str::slug($r),
             ]);
 
-            $roleIds[] = $roleObj->id;
+            // If user have role before, we dont add to the array
+            if (!$this->is($r)) {
+                $roleIds[] = $roleObj->id;
+            }
         }
 
         // Attach roles to user

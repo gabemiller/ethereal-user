@@ -27,12 +27,20 @@ interface RoleInterface
     public function permissions();
 
     /**
-     * This method tells if the Role has the Permission or not.
+     * This method tells if the Role can access with the Permission or not.
      *
      * @param $permission
      * @return boolean
      */
     public function can($permission);
+
+    /**
+     * This method tells if the Role has a Permission with any access or not
+     *
+     * @param $permission
+     * @return mixed
+     */
+    public function has($permission);
 
     /**
      * Add permission to Role

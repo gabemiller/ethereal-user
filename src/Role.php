@@ -92,14 +92,16 @@ class Role extends Model implements RoleInterface
         foreach ($permission as $p) {
 
             $permissionObj = Permission::firstOrCreate([
-                'name' => $permission,
-                'slug' => Str::slug($permission),
+                'name' => $p,
+                'slug' => Str::slug($p),
             ]);
 
-            $permissionIds[] = $permissionObj->id;
+            if (!$this->has($p)) {
+                $permissionIds[] = $permissionObj->id;
+            }
         }
 
-        $this->permissions()->attach($permission);
+        $this->permissions()->attach($permissionIds);
     }
 
     /**
@@ -118,11 +120,12 @@ class Role extends Model implements RoleInterface
 
         foreach ($permission as $p) {
 
-            $permissionObj = Permission::where('slug', '=', Str::slug($permission))->first();
+            $permissionObj = Permission::where('slug', '=', Str::slug($p))->first();
 
+            if($this->has($p))
             $permissionIds[] = $permissionObj->id;
         }
 
-        $this->permissions()->attach($permission);
+        $this->permissions()->attach($permissionIds);
     }
 }
